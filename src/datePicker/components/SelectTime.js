@@ -114,7 +114,7 @@ const TimeScroller = ({title, data, onChange}) => {
   );
 };
 
-const SelectTime = () => {
+const SelectTime = (props) => {
   const {options, state, utils, minuteInterval, mode, onTimeChange} = useCalendar();
   const [mainState, setMainState] = state;
   const [show, setShow] = useState(false);
@@ -124,6 +124,7 @@ const SelectTime = () => {
   });
   const style = styles(options);
   const openAnimation = useRef(new Animated.Value(0)).current;
+  const {customButtons} = props;
 
   useEffect(() => {
     show &&
@@ -194,23 +195,29 @@ const SelectTime = () => {
         data={Array.from({length: 60 / minuteInterval}, (x, i) => i * minuteInterval)}
         onChange={minute => setTime({...time, minute})}
       />
-      <View style={style.footer}>
-        <TouchableOpacity style={style.button} activeOpacity={0.8} onPress={selectTime}>
-          <Text style={style.btnText}>{utils.config.timeSelect}</Text>
-        </TouchableOpacity>
-        {mode !== 'time' && (
-          <TouchableOpacity
-            style={[style.button, style.cancelButton]}
-            onPress={() =>
-              setMainState({
-                type: 'toggleTime',
-              })
-            }
-            activeOpacity={0.8}>
-            <Text style={style.btnText}>{utils.config.timeClose}</Text>
+      {customButtons ? (
+        customButtons(selectTime, () => setMainState({
+          type: 'toggleTime',
+        }))
+      ) : (
+        <View style={style.footer}>
+          <TouchableOpacity style={style.button} activeOpacity={0.8} onPress={selectTime}>
+            <Text style={style.btnText}>{utils.config.timeSelect}</Text>
           </TouchableOpacity>
-        )}
-      </View>
+          {mode !== 'time' && (
+            <TouchableOpacity
+              style={[style.button, style.cancelButton]}
+              onPress={() =>
+                setMainState({
+                  type: 'toggleTime',
+                })
+              }
+              activeOpacity={0.8}>
+              <Text style={style.btnText}>{utils.config.timeClose}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </Animated.View>
   ) : null;
 };

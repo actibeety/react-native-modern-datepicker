@@ -68,7 +68,7 @@ const DatePicker = props => {
           <React.Fragment>
             <Calendar />
             <SelectMonth />
-            <SelectTime />
+            <SelectTime customButtons={props.customButtons} />
           </React.Fragment>
         );
       case 'calendar':
@@ -81,7 +81,7 @@ const DatePicker = props => {
       case 'monthYear':
         return <SelectMonth />;
       case 'time':
-        return <SelectTime />;
+        return <SelectTime customButtons={props.customButtons} />;
     }
   };
 
